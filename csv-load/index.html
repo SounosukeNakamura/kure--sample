@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>呉市スポーツ少年団 登録状況管理</title>
+    <title>スポーツデータダッシュボード</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>呉市スポーツ少年団 登録状況管理</h1>
+            <h1>スポーツデータダッシュボード</h1>
         </header>
 
         <!-- CSVアップロードセクション -->
         <div class="upload-section">
             <label for="csvFile" class="upload-label">
-                <span>少年団登録データCSVを選択</span>
+                <span>スポーツデータCSVを選択</span>
                 <input type="file" id="csvFile" accept=".csv" />
             </label>
             <div id="uploadStatus"></div>
@@ -25,42 +25,59 @@
         <!-- サマリーカード -->
         <div id="summarySection" class="summary-section hidden">
             <div class="card">
-                <h3>登録団数</h3>
+                <h3>チーム数</h3>
                 <p class="card-value" id="originalCount">-</p>
             </div>
             <div class="card">
-                <h3>総団員数</h3>
+                <h3>選手数</h3>
                 <p class="card-value" id="genericCount">-</p>
             </div>
             <div class="card">
-                <h3>スポーツ種目数</h3>
+                <h3>合計得点</h3>
                 <p class="card-value" id="totalQuantity">-</p>
             </div>
             <div class="card">
-                <h3>平均団員数</h3>
+                <h3>平均得点</h3>
                 <p class="card-value" id="avgPriceDiff">-</p>
             </div>
         </div>
 
         <!-- チャートセクション -->
         <div id="chartsSection" class="charts-section hidden">
+<<<<<<< HEAD
             <!-- 登録団名別団員数トップ10 -->
             <div class="chart-container">
                 <h2>登録団名別団員数トップ10</h2>
+=======
+            <!-- 選手別得点トップ10 -->
+            <div class="chart-container">
+                <h2>選手別得点トップ10</h2>
+>>>>>>> parent of 511f4dd (スポーツ少年団ように変更)
                 <canvas id="top10Chart"></canvas>
             </div>
 
-            <!-- スポーツ種目別団員数 -->
+            <!-- チーム別得点比較 -->
             <div class="chart-container">
+<<<<<<< HEAD
                 <h2>スポーツ種目別団員数（登録団名別集計）</h2>
+=======
+                <h2>チーム別得点比較</h2>
+>>>>>>> parent of 511f4dd (スポーツ少年団ように変更)
                 <canvas id="priceComparisonChart"></canvas>
             </div>
         </div>
 
+<<<<<<< HEAD
         <!-- 登録団名別団員分布 (全幅) -->
         <div id="distributionSection" class="distribution-section hidden">
             <div class="chart-container-full">
                 <h2>登録団名別団員分布</h2>
+=======
+        <!-- 選手別得点分布 (全幅) -->
+        <div id="distributionSection" class="distribution-section hidden">
+            <div class="chart-container-full">
+                <h2>選手別得点分布</h2>
+>>>>>>> parent of 511f4dd (スポーツ少年団ように変更)
                 <canvas id="quantityDistributionChart"></canvas>
             </div>
         </div>
@@ -69,7 +86,7 @@
         <div id="tableSection" class="table-section hidden">
             <h2>詳細データテーブル</h2>
             <div class="table-controls">
-                <input type="text" id="searchInput" placeholder="団名またはスポーツ種目で検索...">
+                <input type="text" id="searchInput" placeholder="検索...">
                 <select id="itemsPerPage">
                     <option value="10">10件</option>
                     <option value="25" selected>25件</option>
@@ -81,6 +98,7 @@
                 <table id="dataTable">
                     <thead>
                         <tr>
+<<<<<<< HEAD
                             <th>登録団名</th>
                             <th>所属少年団</th>
                             <th>小学男子</th>
@@ -90,6 +108,16 @@
                             <th>小学生計</th>
                             <th>中学生計</th>
                             <th>合計</th>
+=======
+                            <th>日付</th>
+                            <th>チーム名</th>
+                            <th>対戦相手</th>
+                            <th>選手名</th>
+                            <th>得点</th>
+                            <th>リバウンド</th>
+                            <th>アシスト</th>
+                            <th>評価</th>
+>>>>>>> parent of 511f4dd (スポーツ少年団ように変更)
                         </tr>
                     </thead>
                     <tbody id="tableBody">

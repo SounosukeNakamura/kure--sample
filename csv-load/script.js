@@ -84,6 +84,7 @@ function parseCSV(text) {
 
   for (let i = 1; i < lines.length; i++) {
     const values = lines[i].split(",");
+<<<<<<< HEAD
     // 登録団名が追加された形式：登録団名,少年団名,スポーツ種目,活動頻度,活動施設,小学男子,小学女子,中学男子,中学女子
     if (values.length >= 9) {
       const registrationName = values[0].trim();
@@ -109,6 +110,18 @@ function parseCSV(text) {
         boys_middle: boys_mid,
         girls_middle: girls_mid,
         total: total,
+=======
+    if (values.length >= 7) {
+      rawData.push({
+        date: values[0].trim(),
+        teamName: values[1].trim(),
+        opponent: values[2].trim(),
+        playerName: values[3].trim(),
+        points: parseFloat(values[4]) || 0,
+        rebounds: parseFloat(values[5]) || 0,
+        assists: parseFloat(values[6]) || 0,
+        rating: (parseFloat(values[4]) || 0) + (parseFloat(values[5]) || 0),
+>>>>>>> parent of 511f4dd (スポーツ少年団ように変更)
       });
 
       // 登録団名別に集計
@@ -125,7 +138,11 @@ function parseCSV(text) {
   if (rawData.length > 0) {
     document.getElementById(
       "uploadStatus"
+<<<<<<< HEAD
     ).innerHTML = `<span style="color: #48bb78;">✓ ${rawData.length}件のスポーツ少年団登録データを読み込みました（登録団数: ${Object.keys(aggregatedData).length}）</span>`;
+=======
+    ).innerHTML = `<span style="color: #48bb78;">✓ ${rawData.length}件のスポーツデータを読み込みました</span>`;
+>>>>>>> parent of 511f4dd (スポーツ少年団ように変更)
     updateDashboard();
   } else {
     document.getElementById("uploadStatus").innerHTML =
@@ -153,6 +170,7 @@ function updateDashboard() {
 
 // サマリーカード更新
 function updateSummaryCards() {
+<<<<<<< HEAD
   // 登録団数
   const registrationCount = Object.keys(aggregatedData).length;
   document.getElementById("originalCount").textContent = registrationCount;
@@ -160,16 +178,32 @@ function updateSummaryCards() {
   // 総団員数
   const totalMembers = Object.values(aggregatedData).reduce((sum, group) => sum + group.total, 0);
   document.getElementById("genericCount").textContent = totalMembers;
+=======
+  // チーム数
+  const teams = new Set(rawData.map((d) => d.teamName));
+  document.getElementById("originalCount").textContent = teams.size;
 
-  // スポーツ種目数
-  const sportTypes = new Set(rawData.map((d) => d.sportType));
-  document.getElementById("totalQuantity").textContent = sportTypes.size;
+  // 選手数
+  const players = new Set(rawData.map((d) => d.playerName));
+  document.getElementById("genericCount").textContent = players.size;
+>>>>>>> parent of 511f4dd (スポーツ少年団ように変更)
 
+  // 合計得点
+  const totalPoints = rawData.reduce((sum, d) => sum + d.points, 0);
+  document.getElementById("totalQuantity").textContent =
+    totalPoints.toLocaleString();
+
+<<<<<<< HEAD
   // 平均団員数（登録団名別）
   const avgMembers = registrationCount > 0 ? totalMembers / registrationCount : 0;
+=======
+  // 平均得点
+  const avgPoints =
+    rawData.reduce((sum, d) => sum + d.points, 0) / rawData.length;
+>>>>>>> parent of 511f4dd (スポーツ少年団ように変更)
   document.getElementById(
     "avgPriceDiff"
-  ).textContent = `${avgMembers.toFixed(1)}人`;
+  ).textContent = `${avgPoints.toFixed(1)}点`;
 }
 
 // チャート更新
@@ -179,6 +213,7 @@ function updateCharts() {
   updateQuantityDistributionChart();
 }
 
+<<<<<<< HEAD
 // 登録団名別団員数トップ10
 function updateTop10Chart() {
   // aggregatedDataを団員数でソート
@@ -188,6 +223,24 @@ function updateTop10Chart() {
 
   const labels = sortedRegistrations.map((g) => g.registrationName);
   const data = sortedRegistrations.map((g) => g.total);
+=======
+// 選手別得点トップ10
+function updateTop10Chart() {
+  const pointsByPlayer = {};
+  rawData.forEach((d) => {
+    if (!pointsByPlayer[d.playerName]) {
+      pointsByPlayer[d.playerName] = 0;
+    }
+    pointsByPlayer[d.playerName] += d.points;
+  });
+
+  const sorted = Object.entries(pointsByPlayer)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 10);
+
+  const labels = sorted.map((d) => d[0]);
+  const data = sorted.map((d) => d[1]);
+>>>>>>> parent of 511f4dd (スポーツ少年団ように変更)
 
   if (charts.top10) charts.top10.destroy();
 
@@ -198,7 +251,7 @@ function updateTop10Chart() {
       labels: labels,
       datasets: [
         {
-          label: "団員数",
+          label: "得点",
           data: data,
           backgroundColor: "rgba(102, 126, 234, 0.8)",
           borderColor: "rgba(102, 126, 234, 1)",
@@ -223,8 +276,9 @@ function updateTop10Chart() {
   });
 }
 
-// スポーツ種目別団員数
+// チーム別得点比較
 function updatePriceComparisonChart() {
+<<<<<<< HEAD
   // スポーツ種目ごとに団員数を集計（登録団名別）
   const membersBySport = {};
   Object.values(aggregatedData).forEach((group) => {
@@ -246,6 +300,16 @@ function updatePriceComparisonChart() {
   const labels = sorted.map((d) => d[0]);
   const totalMembers = sorted.map((d) => d[1].total);
   const registrationCount = sorted.map((d) => d[1].count);
+=======
+  // 得点が高い順にソートして上位10件を取得
+  const sortedByPoints = [...rawData]
+    .sort((a, b) => b.points - a.points)
+    .slice(0, 10);
+
+  const labels = sortedByPoints.map((d) => d.teamName.substring(0, 15));
+  const points = sortedByPoints.map((d) => d.points);
+  const rebounds = sortedByPoints.map((d) => d.rebounds);
+>>>>>>> parent of 511f4dd (スポーツ少年団ように変更)
 
   if (charts.priceComparison) charts.priceComparison.destroy();
 
@@ -256,15 +320,20 @@ function updatePriceComparisonChart() {
       labels: labels,
       datasets: [
         {
-          label: "総団員数",
-          data: totalMembers,
+          label: "得点",
+          data: points,
           backgroundColor: "rgba(246, 173, 85, 0.8)",
           borderColor: "rgba(246, 173, 85, 1)",
           borderWidth: 1,
         },
         {
+<<<<<<< HEAD
           label: "登録団数",
           data: registrationCount,
+=======
+          label: "リバウンド",
+          data: rebounds,
+>>>>>>> parent of 511f4dd (スポーツ少年団ように変更)
           backgroundColor: "rgba(102, 126, 234, 0.8)",
           borderColor: "rgba(102, 126, 234, 1)",
           borderWidth: 1,
@@ -289,6 +358,7 @@ function updatePriceComparisonChart() {
   });
 }
 
+<<<<<<< HEAD
 // 登録団名別団員分布（折れ線グラフ、15項目）
 function updateQuantityDistributionChart() {
   // 登録団名別に団員数でソートして上位15件を取得
@@ -298,6 +368,26 @@ function updateQuantityDistributionChart() {
 
   const labels = sortedRegistrations.map((g) => g.registrationName);
   const data = sortedRegistrations.map((g) => g.total);
+=======
+// 選手別得点分布（折れ線グラフ、15項目）
+function updateQuantityDistributionChart() {
+  // 選手ごとに得点を集計
+  const pointsByPlayer = {};
+  rawData.forEach((d) => {
+    if (!pointsByPlayer[d.playerName]) {
+      pointsByPlayer[d.playerName] = 0;
+    }
+    pointsByPlayer[d.playerName] += d.points;
+  });
+
+  // 得点が多い順にソートして上位15件を取得
+  const sorted = Object.entries(pointsByPlayer)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 15);
+
+  const labels = sorted.map((d) => d[0]);
+  const data = sorted.map((d) => d[1]);
+>>>>>>> parent of 511f4dd (スポーツ少年団ように変更)
 
   if (charts.quantityDistribution) charts.quantityDistribution.destroy();
 
@@ -310,7 +400,7 @@ function updateQuantityDistributionChart() {
       labels: labels,
       datasets: [
         {
-          label: "団員数",
+          label: "得点",
           data: data,
           borderColor: "rgba(102, 126, 234, 1)",
           backgroundColor: "rgba(102, 126, 234, 0.1)",
@@ -379,6 +469,7 @@ function updateTable() {
     const genderBreakdown = group.getGenderBreakdown();
     const generationBreakdown = group.getGenerationBreakdown();
     tr.innerHTML = `
+<<<<<<< HEAD
             <td>${group.registrationName}</td>
             <td>${group.dantaiList.join("、")}</td>
             <td>${group.boys_elementary}</td>
@@ -388,6 +479,16 @@ function updateTable() {
             <td>${generationBreakdown.elementary}</td>
             <td>${generationBreakdown.middle}</td>
             <td>${group.total}</td>
+=======
+            <td>${row.date}</td>
+            <td>${row.teamName}</td>
+            <td>${row.opponent}</td>
+            <td>${row.playerName}</td>
+            <td>${row.points.toFixed(1)}</td>
+            <td>${row.rebounds.toLocaleString()}</td>
+            <td>${row.assists.toLocaleString()}</td>
+            <td>${row.rating.toFixed(1)}</td>
+>>>>>>> parent of 511f4dd (スポーツ少年団ように変更)
         `;
     tbody.appendChild(tr);
   });
