@@ -31,14 +31,14 @@ function parseCSV(text) {
     const values = lines[i].split(",");
     if (values.length >= 7) {
       rawData.push({
-        yearMonth: values[0].trim(),
-        originalDrugName: values[1].trim(),
-        originalDrugPrice: parseFloat(values[2]) || 0,
-        genericDrugName: values[3].trim(),
-        genericDrugPrice: parseFloat(values[4]) || 0,
-        quantity: parseFloat(values[5]) || 0,
-        unit: values[6].trim(),
-        priceDiff: (parseFloat(values[2]) || 0) - (parseFloat(values[4]) || 0),
+        date: values[0].trim(),
+        teamName: values[1].trim(),
+        opponent: values[2].trim(),
+        playerName: values[3].trim(),
+        points: parseFloat(values[4]) || 0,
+        rebounds: parseFloat(values[5]) || 0,
+        assists: parseFloat(values[6]) || 0,
+        rating: (parseFloat(values[4]) || 0) + (parseFloat(values[5]) || 0),
       });
     }
   }
@@ -48,7 +48,7 @@ function parseCSV(text) {
   if (rawData.length > 0) {
     document.getElementById(
       "uploadStatus"
-    ).innerHTML = `<span style="color: #48bb78;">✓ ${rawData.length}件のデータを読み込みました</span>`;
+    ).innerHTML = `<span style="color: #48bb78;">✓ ${rawData.length}件のスポーツデータを読み込みました</span>`;
     updateDashboard();
   } else {
     document.getElementById("uploadStatus").innerHTML =
@@ -76,25 +76,25 @@ function updateDashboard() {
 
 // サマリーカード更新
 function updateSummaryCards() {
-  // 先発品種類数
-  const originalDrugs = new Set(rawData.map((d) => d.originalDrugName));
-  document.getElementById("originalCount").textContent = originalDrugs.size;
+  // チーム数
+  const teams = new Set(rawData.map((d) => d.teamName));
+  document.getElementById("originalCount").textContent = teams.size;
 
-  // 後発品種類数
-  const genericDrugs = new Set(rawData.map((d) => d.genericDrugName));
-  document.getElementById("genericCount").textContent = genericDrugs.size;
+  // 選手数
+  const players = new Set(rawData.map((d) => d.playerName));
+  document.getElementById("genericCount").textContent = players.size;
 
-  // 総数量
-  const totalQuantity = rawData.reduce((sum, d) => sum + d.quantity, 0);
+  // 合計得点
+  const totalPoints = rawData.reduce((sum, d) => sum + d.points, 0);
   document.getElementById("totalQuantity").textContent =
-    totalQuantity.toLocaleString();
+    totalPoints.toLocaleString();
 
-  // 平均薬価差
-  const avgPriceDiff =
-    rawData.reduce((sum, d) => sum + d.priceDiff, 0) / rawData.length;
+  // 平均得点
+  const avgPoints =
+    rawData.reduce((sum, d) => sum + d.points, 0) / rawData.length;
   document.getElementById(
     "avgPriceDiff"
-  ).textContent = `¥${avgPriceDiff.toFixed(2)}`;
+  ).textContent = `${avgPoints.toFixed(1)}点`;
 }
 
 // チャート更新
@@ -104,17 +104,17 @@ function updateCharts() {
   updateQuantityDistributionChart();
 }
 
-// 後発品医薬品 使用数量トップ10
+// 選手別得点トップ10
 function updateTop10Chart() {
-  const quantityByGeneric = {};
+  const pointsByPlayer = {};
   rawData.forEach((d) => {
-    if (!quantityByGeneric[d.genericDrugName]) {
-      quantityByGeneric[d.genericDrugName] = 0;
+    if (!pointsByPlayer[d.playerName]) {
+      pointsByPlayer[d.playerName] = 0;
     }
-    quantityByGeneric[d.genericDrugName] += d.quantity;
+    pointsByPlayer[d.playerName] += d.points;
   });
 
-  const sorted = Object.entries(quantityByGeneric)
+  const sorted = Object.entries(pointsByPlayer)
     .sort((a, b) => b[1] - a[1])
     .slice(0, 10);
 
@@ -130,7 +130,7 @@ function updateTop10Chart() {
       labels: labels,
       datasets: [
         {
-          label: "使用数量",
+          label: "得点",
           data: data,
           backgroundColor: "rgba(102, 126, 234, 0.8)",
           borderColor: "rgba(102, 126, 234, 1)",
@@ -155,16 +155,16 @@ function updateTop10Chart() {
   });
 }
 
-// 先発品と後発品の薬価比較
+// チーム別得点比較
 function updatePriceComparisonChart() {
-  // 薬価が高い順にソートして上位10件を取得
-  const sortedByPrice = [...rawData]
-    .sort((a, b) => b.originalDrugPrice - a.originalDrugPrice)
+  // 得点が高い順にソートして上位10件を取得
+  const sortedByPoints = [...rawData]
+    .sort((a, b) => b.points - a.points)
     .slice(0, 10);
 
-  const labels = sortedByPrice.map((d) => d.originalDrugName.substring(0, 20));
-  const originalPrices = sortedByPrice.map((d) => d.originalDrugPrice);
-  const genericPrices = sortedByPrice.map((d) => d.genericDrugPrice);
+  const labels = sortedByPoints.map((d) => d.teamName.substring(0, 15));
+  const points = sortedByPoints.map((d) => d.points);
+  const rebounds = sortedByPoints.map((d) => d.rebounds);
 
   if (charts.priceComparison) charts.priceComparison.destroy();
 
@@ -175,15 +175,15 @@ function updatePriceComparisonChart() {
       labels: labels,
       datasets: [
         {
-          label: "先発品薬価",
-          data: originalPrices,
+          label: "得点",
+          data: points,
           backgroundColor: "rgba(246, 173, 85, 0.8)",
           borderColor: "rgba(246, 173, 85, 1)",
           borderWidth: 1,
         },
         {
-          label: "後発品薬価",
-          data: genericPrices,
+          label: "リバウンド",
+          data: rebounds,
           backgroundColor: "rgba(102, 126, 234, 0.8)",
           borderColor: "rgba(102, 126, 234, 1)",
           borderWidth: 1,
@@ -208,19 +208,19 @@ function updatePriceComparisonChart() {
   });
 }
 
-// 後発品医薬品別 数量分布（折れ線グラフ、15項目）
+// 選手別得点分布（折れ線グラフ、15項目）
 function updateQuantityDistributionChart() {
-  // 後発品ごとに数量を集計
-  const quantityByGeneric = {};
+  // 選手ごとに得点を集計
+  const pointsByPlayer = {};
   rawData.forEach((d) => {
-    if (!quantityByGeneric[d.genericDrugName]) {
-      quantityByGeneric[d.genericDrugName] = 0;
+    if (!pointsByPlayer[d.playerName]) {
+      pointsByPlayer[d.playerName] = 0;
     }
-    quantityByGeneric[d.genericDrugName] += d.quantity;
+    pointsByPlayer[d.playerName] += d.points;
   });
 
-  // 数量が多い順にソートして上位15件を取得
-  const sorted = Object.entries(quantityByGeneric)
+  // 得点が多い順にソートして上位15件を取得
+  const sorted = Object.entries(pointsByPlayer)
     .sort((a, b) => b[1] - a[1])
     .slice(0, 15);
 
@@ -238,7 +238,7 @@ function updateQuantityDistributionChart() {
       labels: labels,
       datasets: [
         {
-          label: "数量",
+          label: "得点",
           data: data,
           borderColor: "rgba(102, 126, 234, 1)",
           backgroundColor: "rgba(102, 126, 234, 0.1)",
@@ -303,14 +303,14 @@ function updateTable() {
   pageData.forEach((row) => {
     const tr = document.createElement("tr");
     tr.innerHTML = `
-            <td>${row.yearMonth}</td>
-            <td>${row.originalDrugName}</td>
-            <td>¥${row.originalDrugPrice.toFixed(2)}</td>
-            <td>${row.genericDrugName}</td>
-            <td>¥${row.genericDrugPrice.toFixed(2)}</td>
-            <td>${row.quantity.toLocaleString()}</td>
-            <td>${row.unit}</td>
-            <td>¥${row.priceDiff.toFixed(2)}</td>
+            <td>${row.date}</td>
+            <td>${row.teamName}</td>
+            <td>${row.opponent}</td>
+            <td>${row.playerName}</td>
+            <td>${row.points.toFixed(1)}</td>
+            <td>${row.rebounds.toLocaleString()}</td>
+            <td>${row.assists.toLocaleString()}</td>
+            <td>${row.rating.toFixed(1)}</td>
         `;
     tbody.appendChild(tr);
   });

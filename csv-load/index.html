@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ジェネリック医薬品ダッシュボード</title>
+    <title>スポーツデータダッシュボード</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>ジェネリック医薬品ダッシュボード</h1>
+            <h1>スポーツデータダッシュボード</h1>
         </header>
 
         <!-- CSVアップロードセクション -->
         <div class="upload-section">
             <label for="csvFile" class="upload-label">
-                <span>CSVファイルを選択</span>
+                <span>スポーツデータCSVを選択</span>
                 <input type="file" id="csvFile" accept=".csv" />
             </label>
             <div id="uploadStatus"></div>
@@ -25,42 +25,42 @@
         <!-- サマリーカード -->
         <div id="summarySection" class="summary-section hidden">
             <div class="card">
-                <h3>先発品種類数</h3>
+                <h3>チーム数</h3>
                 <p class="card-value" id="originalCount">-</p>
             </div>
             <div class="card">
-                <h3>後発品種類数</h3>
+                <h3>選手数</h3>
                 <p class="card-value" id="genericCount">-</p>
             </div>
             <div class="card">
-                <h3>総数量</h3>
+                <h3>合計得点</h3>
                 <p class="card-value" id="totalQuantity">-</p>
             </div>
             <div class="card">
-                <h3>平均薬価差</h3>
+                <h3>平均得点</h3>
                 <p class="card-value" id="avgPriceDiff">-</p>
             </div>
         </div>
 
         <!-- チャートセクション -->
         <div id="chartsSection" class="charts-section hidden">
-            <!-- 後発品医薬品 使用数量トップ10 -->
+            <!-- 選手別得点トップ10 -->
             <div class="chart-container">
-                <h2>後発品医薬品 使用数量トップ10</h2>
+                <h2>選手別得点トップ10</h2>
                 <canvas id="top10Chart"></canvas>
             </div>
 
-            <!-- 先発品と後発品の薬価比較 -->
+            <!-- チーム別得点比較 -->
             <div class="chart-container">
-                <h2>先発品と後発品の薬価比較</h2>
+                <h2>チーム別得点比較</h2>
                 <canvas id="priceComparisonChart"></canvas>
             </div>
         </div>
 
-        <!-- 後発品医薬品別 数量分布 (全幅) -->
+        <!-- 選手別得点分布 (全幅) -->
         <div id="distributionSection" class="distribution-section hidden">
             <div class="chart-container-full">
-                <h2>後発品医薬品別 数量分布</h2>
+                <h2>選手別得点分布</h2>
                 <canvas id="quantityDistributionChart"></canvas>
             </div>
         </div>
@@ -81,14 +81,14 @@
                 <table id="dataTable">
                     <thead>
                         <tr>
-                            <th>年月</th>
-                            <th>先発医薬品名</th>
-                            <th>先発医薬品薬価</th>
-                            <th>後発医薬品名</th>
-                            <th>後発医薬品薬価</th>
-                            <th>数量</th>
-                            <th>単位</th>
-                            <th>薬価差</th>
+                            <th>日付</th>
+                            <th>チーム名</th>
+                            <th>対戦相手</th>
+                            <th>選手名</th>
+                            <th>得点</th>
+                            <th>リバウンド</th>
+                            <th>アシスト</th>
+                            <th>評価</th>
                         </tr>
                     </thead>
                     <tbody id="tableBody">
