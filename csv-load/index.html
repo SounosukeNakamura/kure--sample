@@ -44,23 +44,23 @@
 
         <!-- チャートセクション -->
         <div id="chartsSection" class="charts-section hidden">
-            <!-- 少年団別団員数トップ10 -->
+            <!-- 登録団名別団員数トップ10 -->
             <div class="chart-container">
-                <h2>少年団別団員数トップ10</h2>
+                <h2>登録団名別団員数トップ10</h2>
                 <canvas id="top10Chart"></canvas>
             </div>
 
             <!-- スポーツ種目別団員数 -->
             <div class="chart-container">
-                <h2>スポーツ種目別団員数</h2>
+                <h2>スポーツ種目別団員数（登録団名別集計）</h2>
                 <canvas id="priceComparisonChart"></canvas>
             </div>
         </div>
 
-        <!-- 少年団別団員分布 (全幅) -->
+        <!-- 登録団名別団員分布 (全幅) -->
         <div id="distributionSection" class="distribution-section hidden">
             <div class="chart-container-full">
-                <h2>少年団別団員分布</h2>
+                <h2>登録団名別団員分布</h2>
                 <canvas id="quantityDistributionChart"></canvas>
             </div>
         </div>
@@ -81,14 +81,14 @@
                 <table id="dataTable">
                     <thead>
                         <tr>
-                            <th>少年団名</th>
-                            <th>スポーツ種目</th>
-                            <th>活動頻度</th>
-                            <th>活動施設</th>
+                            <th>登録団名</th>
+                            <th>所属少年団</th>
                             <th>小学男子</th>
                             <th>小学女子</th>
                             <th>中学男子</th>
                             <th>中学女子</th>
+                            <th>小学生計</th>
+                            <th>中学生計</th>
                             <th>合計</th>
                         </tr>
                     </thead>
